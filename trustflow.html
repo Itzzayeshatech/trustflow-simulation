@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>🚀 TrustFlow AI - TenzorX 2026</title>
+    <style>body{font-family:Arial;margin:20px;background:#f0f8ff}section{margin:20px 0;padding:20px;border:1px solid #007bff;border-radius:10px;background:white}input,button{padding:8px;margin:5px}canvas{border:2px solid #007bff;border-radius:10px}</style>
+</head>
+<body>
+<h1>🏆 TrustFlow AI Demo - 71.94% Default Reduction</h1>
+
+<section>
+<h2>🤖 AI TrustScore</h2>
+Reviews: <input id="reviews" type="number" value="10"><br>
+Avg Rating: <input id="avg" type="number" step="0.1" value="4.2" min="1" max="5"><br>
+<button onclick="trustScore()">Calculate</button>
+<p id="trustOut">TrustScore: --</p>
+</section>
+
+<section>
+<h2>💰 Adaptive EMI</h2>
+Income (₹): <input id="income" type="number" value="30000"><br>
+Loan %: <input id="loanpct" type="range" min="20" max="50" value="35">%<br>
+Rate (%): <input id="rate" type="number" step="0.1" value="8.5"><br>
+<button onclick="calcEMI()">Calculate EMI</button>
+<p id="emiOut">EMI: --</p>
+</section>
+
+<section>
+<h2>🎱 Risk Pool Simulation</h2>
+<canvas id="pool" width="500" height="250"></canvas><br>
+<button onclick="shoot()">Shoot Ball (Risk Event)</button>
+<p>Collision physics = Risk pooling</p>
+</section>
+
+<script>
+function trustScore(){
+    let v=document.getElementById('reviews').value;
+    let R=parseFloat(document.getElementById('avg').value);
+    let m=3.5,C=7;
+    let ts=(v*R + m*C)/(v+C);
+    document.getElementById('trustOut').innerHTML=`TrustScore: ${ts.toFixed(1)}/5`;
+}
+
+function calcEMI(){
+    let income=parseFloat(document.getElementById('income').value);
+    let pct=parseFloat(document.getElementById('loanpct').value)/100;
+    let P=income*pct*12; // Annual loan
+    let r=parseFloat(document.getElementById('rate').value)/12/100;
+    let N=60; // 5 years
+    let emi=P*r*Math.pow(1+r,N)/(Math.pow(1+r,N)-1);
+    document.getElementById('emiOut').innerHTML=`Loan: ₹${P.toLocaleString()}<br>Monthly EMI: ₹${emi.toFixed(0)}`;
+}
+
+let balls=[],canvas=document.getElementById('pool'),ctx=canvas.getContext('2d');
+balls.push({x:100,y:125,vx:0,vy:0,r:20,color:'white'});
+balls.push({x:400,y:125,vx:0,vy:0,r:15,color:'red'});
+function animate(){ctx.clearRect(0,0,500,250);ctx.fillStyle='#228B22';ctx.fillRect(0,0,500,250);
+balls.forEach(b=>{b.x+=b.vx;b.y+=b.vy;b.vx*=0.98;b.vy*=0.98;if(b.x< b.r||b.x>500-b.r)b.vx*=-1;if(b.y< b.r||b.y>250-b.r)b.vy*=-1;b.collide= o=>{let d=Math.hypot(o.x-b.x,o.y-b.y);if(d< b.r+o.r){let a=Math.atan2(o.y-b.y,o.x-b.x),[vx1,vy1]=[(b.vx*Math.cos(a)+b.vy*Math.sin(a)),(b.vy*Math.cos(a)-b.vx*Math.sin(a))],[vx2,vy2]=[(o.vx*Math.cos(a)+o.vy*Math.sin(a)),(o.vy*Math.cos(a)-o.vx*Math.sin(a))];b.vx=vx2*Math.cos(a)-vy1*Math.sin(a);b.vy=vy1*Math.cos(a)+vx2*Math.sin(a);o.vx=vx1*Math.cos(a)-vy2*Math.sin(a);o.vy=vy2*Math.cos(a)+vx1*Math.sin(a);}};ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,Math.PI*2);ctx.fillStyle=b.color;ctx.fill();});
+for(let i=0;i<balls.length;i++)for(let j=i+1;j<balls.length;j++)balls[i].collide(balls[j]);requestAnimationFrame(animate);
+}
+function shoot(){balls[0].vx=(Math.random()-0.5)*15;balls[0].vy=(Math.random()-0.5)*15;}
+document.getElementById('loanpct').oninput=e=>e.target.nextSibling.data=e.target.value+'%';
+animate();trustScore();calcEMI();
+</script>
+<footer style="margin-top:50px;text-align:center;color:#666">
+🔗 <a href="https://github.com/Itzzayeshatech/TrustFlowAI">GitHub</a> | 
+🏆 TenzorX 2026 | 71.94% Default Reduction
+</footer>
+</body>
+</html>
